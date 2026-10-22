@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* Green and white only. Amber and red are for problem severity, nothing else. */
+@theme {
+  --color-forest: #0f3d24;
+  --color-pine: #14532d;
+  --color-leaf: #16a34a;
+  --color-sprout: #86efac;
+  --color-mint: #f0fdf4;
+  --color-line: #dcfce7;
+  --color-amber: #d97706;
+  --color-red: #dc2626;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+}
+
+/* 18px base: every Tailwind size scales from here, so nothing is small. Never use text-xs or text-sm. */
+html {
+  font-size: 18px;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-forest);
+}
