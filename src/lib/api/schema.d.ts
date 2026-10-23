@@ -26,6 +26,11 @@ export interface paths {
                     "application/json": {
                         /** @description Store address, e.g. yourstore.com */
                         url: string;
+                        /**
+                         * @description Scan again even if the store was scanned in the last hour (e.g. after fixing things)
+                         * @default false
+                         */
+                        rescan?: boolean;
                     };
                 };
             };
@@ -109,6 +114,63 @@ export interface paths {
                             startedAt: string | null;
                             finishedAt: string | null;
                         };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sites/{id}/scans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A store's completed scans, newest first (score over time) */
+        get: {
+            parameters: {
+                query?: {
+                    limit?: number;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** Format: uuid */
+                            id: string;
+                            /**
+                             * Format: uuid
+                             * @description Use for ownership verification
+                             */
+                            siteId: string;
+                            url: string;
+                            /** @enum {string} */
+                            status: "queued" | "running" | "completed" | "failed";
+                            score: number | null;
+                            partial: boolean;
+                            error: string | null;
+                            createdAt: string;
+                            startedAt: string | null;
+                            finishedAt: string | null;
+                        }[];
                     };
                 };
             };
@@ -240,6 +302,8 @@ export interface paths {
                                 partial: boolean;
                                 durationMs: number;
                                 fixPackSummary: {
+                                    /** @description Paths of the ready-made files, e.g. /robots.txt */
+                                    files: string[];
                                     productSchemas: number;
                                     sellerSteps: number;
                                 };
@@ -432,8 +496,15 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            robotsTxtAdditions: string | null;
-                            llmsTxt: string;
+                            files: {
+                                /** @description Where it goes on the store, e.g. /robots.txt */
+                                path: string;
+                                contentType: string;
+                                content: string;
+                                why: string;
+                                /** @description Steps for the store's platform */
+                                install: string[];
+                            }[];
                             productSchemas: {
                                 url: string;
                                 jsonLd: {

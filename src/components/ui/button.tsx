@@ -2,12 +2,14 @@ import Link from 'next/link';
 import type { ComponentProps } from 'react';
 
 const styles = {
-  solid: 'bg-leaf text-white hover:bg-pine',
-  light: 'bg-white text-forest hover:bg-mint',
+  solid: 'bg-forest text-white hover:bg-moss',
+  lime: 'bg-lime text-forest hover:bg-sage',
+  outline: 'border border-line bg-white text-forest hover:border-sage hover:bg-lime-soft',
 } as const;
 
+// Press feedback: a quick scale-down so every click feels heard.
 const base =
-  'inline-flex h-16 items-center justify-center px-10 text-xl font-bold transition-colors disabled:opacity-60 focus-visible:outline-4 focus-visible:outline-sprout';
+  'inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold whitespace-nowrap transition-[background-color,border-color,transform] duration-150 ease-out active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-moss';
 
 type Variant = keyof typeof styles;
 

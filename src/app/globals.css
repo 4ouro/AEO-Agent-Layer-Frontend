@@ -1,24 +1,67 @@
 @import "tailwindcss";
 
-/* Green and white only. Amber and red are for problem severity, nothing else. */
+/*
+  Light green and white (matches the 4ouro site). Greens carry everything; amber and red are only for problem severity.
+  canvas: page · white: panels · forest: text · muted: secondary text · line: borders
+  lime / lime-soft: highlights and tracks · moss / sage / leaf: data
+*/
 @theme {
-  --color-forest: #0f3d24;
-  --color-pine: #14532d;
-  --color-leaf: #16a34a;
-  --color-sprout: #86efac;
-  --color-mint: #f0fdf4;
-  --color-line: #dcfce7;
-  --color-amber: #d97706;
-  --color-red: #dc2626;
-  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --color-canvas: oklch(0.972 0.01 128);
+  --color-forest: oklch(0.27 0.045 148);
+  --color-muted: oklch(0.46 0.03 145);
+  --color-line: oklch(0.915 0.018 128);
+  --color-lime: oklch(0.885 0.095 126);
+  --color-lime-soft: oklch(0.955 0.04 126);
+  --color-moss: oklch(0.47 0.065 148);
+  --color-sage: oklch(0.78 0.06 140);
+  --color-leaf: oklch(0.56 0.13 142);
+  --color-amber: oklch(0.72 0.15 68);
+  --color-red: oklch(0.58 0.19 27);
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+  --font-serif: var(--font-lora), Georgia, serif;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/*
+  Data fill-in animations. They only run when the page was visible on load (layout.tsx sets data-motion):
+  a background tab pauses animations at their first frame, which would leave the gauge and bars looking empty.
+*/
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+}
+@keyframes light-up {
+  from { fill: var(--color-line); }
+}
+:root[data-motion] .motion-grow-x {
+  transform-origin: left;
+  animation: grow-x 700ms var(--ease-out) both;
+}
+:root[data-motion] .motion-light-up {
+  animation: light-up 500ms var(--ease-out) both;
 }
 
 /* 18px base: every Tailwind size scales from here, so nothing is small. Never use text-xs or text-sm. */
 html {
   font-size: 18px;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #ffffff;
+  background: var(--color-canvas);
   color: var(--color-forest);
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* Data animations are decoration: drop them for people who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
 }

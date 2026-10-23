@@ -5,6 +5,7 @@ import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { startScan } from '@/lib/api/scans';
 
+/** One search-style field: the address and the Scan button share a single bar. */
 export function ScanForm() {
   const router = useRouter();
   const [url, setUrl] = useState('');
@@ -25,22 +26,27 @@ export function ScanForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex w-full flex-col gap-4">
-      <div className="flex w-full flex-col gap-4 md:flex-row">
+    <form onSubmit={onSubmit} className="flex w-full max-w-2xl flex-col gap-3">
+      <div className="flex h-16 items-center gap-2 rounded-full border border-line bg-canvas p-1.5 pl-6 transition-[border-color,background-color] duration-150 focus-within:border-moss focus-within:bg-white">
         <input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="yourstore.com"
           aria-label="Store address"
+          aria-invalid={error ? true : undefined}
           required
           autoFocus
-          className="h-20 w-full min-w-0 flex-1 border-2 border-white/30 bg-white px-8 text-2xl text-forest placeholder:text-forest/40 focus:border-sprout focus:outline-none"
+          className="h-full min-w-0 flex-1 bg-transparent text-xl text-forest placeholder:text-muted focus:outline-none"
         />
-        <Button type="submit" disabled={pending} className="h-20 md:w-64">
+        <Button type="submit" disabled={pending} className="h-full px-8">
           {pending ? 'Starting' : 'Scan'}
         </Button>
       </div>
-      {error && <p className="text-xl text-sprout">{error}</p>}
+      {error && (
+        <p role="alert" className="pl-6 text-base text-red">
+          {error}
+        </p>
+      )}
     </form>
   );
 }

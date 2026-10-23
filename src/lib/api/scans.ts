@@ -5,6 +5,10 @@ export type ReportResponse = NonNullable<Awaited<ReturnType<typeof getReport>>>;
 export type Report = ReportResponse['report'];
 export type Scan = ReportResponse['scan'];
 export type Issue = Report['issues'][number];
+export type BotAccess = Report['botAccess'][number];
+export type ScannedPage = Report['pages'][number];
+export type Area = Report['areas'][number]['area'];
+export type Severity = Issue['severity'];
 
 /** The backend's error message, so the seller sees why (e.g. "Enter a website address, like yourstore.com"). */
 function errorMessage(error: unknown): string {
@@ -12,8 +16,9 @@ function errorMessage(error: unknown): string {
   return message ?? 'Something went wrong. Please try again.';
 }
 
-export async function startScan(url: string): Promise<{ id: string } | { error: string }> {
-  const { data, error } = await api.POST('/v1/scans', { body: { url } });
+/** `rescan` skips the one-hour reuse of a finished scan (the seller fixed things and wants a new score). */
+export async function startScan(url: string, { rescan = false } = {}): Promise<{ id: string } | { error: string }> {
+  const { data, error } = await api.POST('/v1/scans', { body: { url, rescan } });
   return data ? { id: data.id } : { error: errorMessage(error) };
 }
 
@@ -29,6 +34,12 @@ export async function getReport(id: string) {
   const { data, response } = await api.GET('/v1/scans/{id}/report', { params: { path: { id } }, cache: 'no-store' });
   if (!data) throw new Error(`Could not load report (${response.status})`);
   return data;
+}
+
+/** A store's completed scans, newest first. Empty on error: history is a nice-to-have, never a reason to fail the page. */
+export async function getSiteScans(siteId: string, limit = 20) {
+  const { data } = await api.GET('/v1/sites/{id}/scans', { params: { path: { id: siteId }, query: { limit } }, cache: 'no-store' });
+  return data ?? [];
 }
 
 /** Live progress stream (server-sent events). */
