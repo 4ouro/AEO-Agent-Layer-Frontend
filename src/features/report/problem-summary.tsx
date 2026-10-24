@@ -3,12 +3,12 @@ import type { Issue } from '@/lib/api/scans';
 import { SEVERITIES, SEVERITY_FILL, SEVERITY_LABELS } from './labels';
 
 /** How many problems, how bad, and who fixes them. */
-export function ProblemSummary({ issues }: { issues: Issue[] }) {
+export function ProblemSummary({ issues, noun }: { issues: Issue[]; noun: string }) {
   const counts = SEVERITIES.map((s) => ({ severity: s, count: issues.filter((i) => i.severity === s).length }));
   const ours = issues.filter((i) => i.fixedBy === 'us').length;
 
   return (
-    <Panel label="Problems found" className="lg:col-span-4">
+    <Panel label="Problems found" className="lg:col-span-6 xl:col-span-4">
       <div className="flex items-baseline gap-3">
         <span className="text-6xl leading-none font-extrabold tabular-nums">{issues.length}</span>
         <span className="text-base text-muted">{issues.length === 1 ? 'problem' : 'problems'}</span>
@@ -35,7 +35,7 @@ export function ProblemSummary({ issues }: { issues: Issue[] }) {
           </ul>
         </>
       ) : (
-        <p className="text-base text-muted">AI can read your store. Nothing to fix.</p>
+        <p className="text-base text-muted">AI can read your {noun}. Nothing to fix.</p>
       )}
 
       <dl className="mt-auto grid grid-cols-2 divide-x divide-line border-t border-line pt-5">

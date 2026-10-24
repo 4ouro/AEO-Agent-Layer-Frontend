@@ -32,8 +32,8 @@ async function ScanContent({ params }: { params: PageProps<'/scans/[id]'>['param
 
   if (scan.status === 'failed') {
     return (
-      <MessagePage kicker={domain} title="We could not scan this store." detail={scan.error}>
-        <ButtonLink href="/">Try another store</ButtonLink>
+      <MessagePage kicker={domain} title="We could not scan this site." detail={scan.error}>
+        <ButtonLink href="/">Try another site</ButtonLink>
       </MessagePage>
     );
   }

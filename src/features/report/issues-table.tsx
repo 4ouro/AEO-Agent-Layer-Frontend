@@ -3,17 +3,17 @@ import type { Issue } from '@/lib/api/scans';
 import { AREA_LABELS, SEVERITY_FILL, SEVERITY_LABELS } from './labels';
 
 // Shared column layout for the header and every row.
-const COLUMNS = 'md:grid-cols-[minmax(0,1fr)_9rem_8rem_7rem_4rem]';
+const COLUMNS = 'xl:grid-cols-[minmax(0,1fr)_9rem_8rem_7rem_4rem]';
 
 /** Every problem, most important first. Open a row for why it matters and how to fix it. */
-export function IssuesTable({ issues }: { issues: Issue[] }) {
+export function IssuesTable({ issues, noun }: { issues: Issue[]; noun: string }) {
   return (
     <Panel label="Problems to fix" className="lg:col-span-12" action={<span className="text-base text-muted">Most important first</span>}>
       {issues.length === 0 ? (
-        <p className="text-base text-muted">AI can read your store. Nothing to fix.</p>
+        <p className="text-base text-muted">AI can read your {noun}. Nothing to fix.</p>
       ) : (
         <div className="-mx-6 md:-mx-7">
-          <div className={`hidden gap-4 border-y border-line bg-canvas px-7 py-3 text-base text-muted md:grid ${COLUMNS}`}>
+          <div className={`hidden gap-4 border-y border-line bg-canvas px-7 py-3 text-base text-muted xl:grid ${COLUMNS}`}>
             <span>Problem</span>
             <span>Area</span>
             <span>Severity</span>
@@ -31,24 +31,24 @@ export function IssuesTable({ issues }: { issues: Issue[] }) {
                       <Chevron />
                       <span className="text-base font-semibold">{issue.summary}</span>
                     </span>
-                    <span className="hidden text-base text-muted md:block">{AREA_LABELS[issue.area]}</span>
-                    <span className="col-start-1 flex items-center gap-2 pl-8 text-base md:col-start-auto md:pl-0">
+                    <span className="hidden text-base text-muted xl:block">{AREA_LABELS[issue.area]}</span>
+                    <span className="col-start-1 flex items-center gap-2 pl-8 text-base xl:col-start-auto xl:pl-0">
                       <span className={`h-2.5 w-2.5 rounded-full ${SEVERITY_FILL[issue.severity]}`} />
                       {SEVERITY_LABELS[issue.severity]}
-                      <span className="text-muted md:hidden">· {AREA_LABELS[issue.area]}</span>
+                      <span className="text-muted xl:hidden">· {AREA_LABELS[issue.area]}</span>
                     </span>
-                    <span className="hidden md:block">
+                    <span className="hidden xl:block">
                       <FixedBy who={issue.fixedBy} />
                     </span>
-                    <span className="row-start-1 text-right text-base font-semibold text-leaf tabular-nums md:row-start-auto">
-                      {issue.scoreGain > 0 ? `+${issue.scoreGain}` : ''}
+                    <span className="row-start-1 text-right text-base font-semibold text-leaf tabular-nums xl:row-start-auto">
+                      {issue.informational ? <span className="font-normal text-muted">Not scored</span> : issue.scoreGain > 0 ? `+${issue.scoreGain}` : ''}
                     </span>
                   </summary>
                   <div className="grid gap-6 px-6 pt-1 pb-6 md:grid-cols-2 md:px-7 md:pl-[4.25rem]">
                     <div className="flex flex-col gap-2">
                       <span className="text-base font-semibold">Why it matters</span>
                       <p className="max-w-[65ch] text-base text-muted">{issue.why}</p>
-                      <span className="mt-2 md:hidden">
+                      <span className="mt-2 xl:hidden">
                         <FixedBy who={issue.fixedBy} />
                       </span>
                     </div>

@@ -8,7 +8,7 @@ import { scanEventsUrl } from '@/lib/api/scans';
 
 // The engine's steps, in order, with the words the seller sees.
 const STEPS = [
-  { step: 'discover', label: 'Opening your store' },
+  { step: 'discover', label: 'Opening your site' },
   { step: 'fetch', label: 'Visiting as AI bots' },
   { step: 'render', label: 'Opening in a browser' },
   { step: 'check', label: 'Checking what AI sees' },

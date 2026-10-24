@@ -24,7 +24,7 @@ export function ScoreHistory({ scans, currentId }: { scans: Scan[]; currentId: s
   return (
     <Panel
       label="Score over time"
-      className="lg:col-span-5"
+      className="lg:col-span-6 xl:col-span-5"
       action={
         points.length > 1 && (
           <span className={`text-base font-semibold tabular-nums ${change > 0 ? 'text-leaf' : change < 0 ? 'text-red' : 'text-muted'}`}>

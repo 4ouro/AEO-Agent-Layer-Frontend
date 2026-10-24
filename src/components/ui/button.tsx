@@ -1,22 +1,41 @@
+import * as React from 'react';
 import Link from 'next/link';
-import type { ComponentProps } from 'react';
-
-const styles = {
-  solid: 'bg-forest text-white hover:bg-moss',
-  lime: 'bg-lime text-forest hover:bg-sage',
-  outline: 'border border-line bg-white text-forest hover:border-sage hover:bg-lime-soft',
-} as const;
+import { cva, type VariantProps } from 'class-variance-authority';
+import { Slot } from 'radix-ui';
+import { cn } from '@/lib/utils';
 
 // Press feedback: a quick scale-down so every click feels heard.
-const base =
-  'inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold whitespace-nowrap transition-[background-color,border-color,transform] duration-150 ease-out active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-moss';
+const buttonVariants = cva(
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-base font-semibold whitespace-nowrap transition-[background-color,border-color,transform] duration-150 ease-out outline-none active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-moss',
+  {
+    variants: {
+      variant: {
+        default: 'bg-forest text-white hover:bg-moss',
+        lime: 'bg-lime text-forest hover:bg-sage',
+        outline: 'border border-line bg-white text-forest hover:border-sage hover:bg-lime-soft',
+      },
+      size: {
+        default: 'h-12 px-6',
+        sm: 'h-10 px-4',
+      },
+    },
+    defaultVariants: { variant: 'default', size: 'default' },
+  },
+);
 
-type Variant = keyof typeof styles;
+type ButtonProps = React.ComponentProps<'button'> & VariantProps<typeof buttonVariants> & { asChild?: boolean };
 
-export function Button({ variant = 'solid', className = '', ...props }: ComponentProps<'button'> & { variant?: Variant }) {
-  return <button className={`${base} ${styles[variant]} ${className}`} {...props} />;
+function Button({ className, variant, size, asChild = false, ...props }: ButtonProps) {
+  const Comp = asChild ? Slot.Root : 'button';
+  return <Comp data-slot="button" className={cn(buttonVariants({ variant, size }), className)} {...props} />;
 }
 
-export function ButtonLink({ variant = 'solid', className = '', ...props }: ComponentProps<typeof Link> & { variant?: Variant }) {
-  return <Link className={`${base} ${styles[variant]} ${className}`} {...props} />;
+function ButtonLink({ className, variant, size, ...props }: React.ComponentProps<typeof Link> & VariantProps<typeof buttonVariants>) {
+  return (
+    <Button asChild variant={variant} size={size} className={className}>
+      <Link {...props} />
+    </Button>
+  );
 }
+
+export { Button, ButtonLink, buttonVariants };

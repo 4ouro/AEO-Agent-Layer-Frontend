@@ -7,13 +7,13 @@ const TYPES = [
   { type: 'training', label: 'Training' },
 ] as const;
 
-/** Which AI bots can read the store, by company and job. Blocking training bots is allowed (a business choice), so it shows amber, not red. */
-export function BotAccess({ bots }: { bots: Bot[] }) {
+/** Which AI bots can read the site, by company and job. Blocking training bots is allowed (a business choice), so it shows amber, not red. */
+export function BotAccess({ bots, noun }: { bots: Bot[]; noun: string }) {
   const vendors = [...new Set(bots.map((b) => b.vendor))];
   const allowed = bots.filter((b) => !blocked(b)).length;
 
   return (
-    <Panel label="AI bots" action={<span className="text-base text-muted tabular-nums">{allowed} of {bots.length} can read your store</span>}>
+    <Panel label="AI bots" action={<span className="text-base text-muted tabular-nums">{allowed} of {bots.length} can read your {noun}</span>}>
       <div className="-mx-6 overflow-x-auto px-6 md:-mx-7 md:px-7">
         <table className="w-full min-w-[30rem] border-separate border-spacing-y-3 text-base">
           <thead>

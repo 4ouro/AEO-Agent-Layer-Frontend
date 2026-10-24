@@ -31,6 +31,19 @@ export interface paths {
                          * @default false
                          */
                         rescan?: boolean;
+                        /** @description What kind of business this is (1 to 3). Omit to let the scanner detect it */
+                        businessTypes?: ("store" | "software" | "services" | "local" | "publisher" | "other")[];
+                        /** @description Optional extra context about the business */
+                        details?: {
+                            /** @description What the business sells or offers */
+                            offer?: string;
+                            /** @description Who the customers are */
+                            customers?: string;
+                            /** @description Where the business operates, e.g. India */
+                            market?: string;
+                            /** @description Full address of the most important page, on the same domain */
+                            keyPage?: string;
+                        };
                     };
                 };
             };
@@ -58,6 +71,9 @@ export interface paths {
                             createdAt: string;
                             startedAt: string | null;
                             finishedAt: string | null;
+                            /** @description As given by the seller; empty when not given */
+                            businessTypes: ("store" | "software" | "services" | "local" | "publisher" | "other")[];
+                            scoringVersion: string;
                             /** @description True when a recent scan of the same store was returned */
                             reused: boolean;
                         };
@@ -113,6 +129,9 @@ export interface paths {
                             createdAt: string;
                             startedAt: string | null;
                             finishedAt: string | null;
+                            /** @description As given by the seller; empty when not given */
+                            businessTypes: ("store" | "software" | "services" | "local" | "publisher" | "other")[];
+                            scoringVersion: string;
                         };
                     };
                 };
@@ -170,6 +189,9 @@ export interface paths {
                             createdAt: string;
                             startedAt: string | null;
                             finishedAt: string | null;
+                            /** @description As given by the seller; empty when not given */
+                            businessTypes: ("store" | "software" | "services" | "local" | "publisher" | "other")[];
+                            scoringVersion: string;
                         }[];
                     };
                 };
@@ -226,6 +248,9 @@ export interface paths {
                                 createdAt: string;
                                 startedAt: string | null;
                                 finishedAt: string | null;
+                                /** @description As given by the seller; empty when not given */
+                                businessTypes: ("store" | "software" | "services" | "local" | "publisher" | "other")[];
+                                scoringVersion: string;
                             };
                             report: {
                                 url: string;
@@ -237,7 +262,7 @@ export interface paths {
                                 serious: boolean;
                                 areas: {
                                     /** @enum {string} */
-                                    area: "access" | "visibility" | "productData" | "trust" | "aiCommerce" | "discovery";
+                                    area: "access" | "visibility" | "productData" | "offering" | "trust" | "aiCommerce" | "discovery";
                                     weight: number;
                                     /** @description -1 when the area could not be measured */
                                     score: number;
@@ -245,10 +270,10 @@ export interface paths {
                                 issues: {
                                     checkId: string;
                                     /** @enum {string} */
-                                    area: "access" | "visibility" | "productData" | "trust" | "aiCommerce" | "discovery";
+                                    area: "access" | "visibility" | "productData" | "offering" | "trust" | "aiCommerce" | "discovery";
                                     title: string;
                                     /** @enum {string} */
-                                    status: "pass" | "warn" | "fail" | "unknown";
+                                    status: "pass" | "warn" | "fail" | "unknown" | "not_applicable";
                                     /** @enum {string} */
                                     severity: "critical" | "high" | "medium" | "low";
                                     /** @enum {string} */
@@ -260,15 +285,20 @@ export interface paths {
                                     evidence: {
                                         [key: string]: unknown;
                                     };
+                                    informational?: boolean;
+                                    /** @enum {string} */
+                                    source?: "rule" | "ai" | "user" | "rule+ai";
+                                    /** @enum {string} */
+                                    confidence?: "high" | "medium" | "low";
                                     scoreGain: number;
                                 }[];
                                 checks: {
                                     checkId: string;
                                     /** @enum {string} */
-                                    area: "access" | "visibility" | "productData" | "trust" | "aiCommerce" | "discovery";
+                                    area: "access" | "visibility" | "productData" | "offering" | "trust" | "aiCommerce" | "discovery";
                                     title: string;
                                     /** @enum {string} */
-                                    status: "pass" | "warn" | "fail" | "unknown";
+                                    status: "pass" | "warn" | "fail" | "unknown" | "not_applicable";
                                     /** @enum {string} */
                                     severity: "critical" | "high" | "medium" | "low";
                                     /** @enum {string} */
@@ -280,6 +310,11 @@ export interface paths {
                                     evidence: {
                                         [key: string]: unknown;
                                     };
+                                    informational?: boolean;
+                                    /** @enum {string} */
+                                    source?: "rule" | "ai" | "user" | "rule+ai";
+                                    /** @enum {string} */
+                                    confidence?: "high" | "medium" | "low";
                                 }[];
                                 botAccess: {
                                     token: string;
@@ -293,18 +328,45 @@ export interface paths {
                                 pages: {
                                     url: string;
                                     /** @enum {string} */
-                                    kind: "home" | "product" | "category" | "policy";
+                                    kind: "home" | "product" | "category" | "policy" | "about" | "contact" | "pricing" | "features" | "docs" | "service" | "case-study";
                                     rawStatus: number | null;
                                     renderStatus: number | null;
                                     rawMs: number | null;
                                     renderMs: number | null;
                                 }[];
+                                businessTypes?: ("store" | "software" | "services" | "local" | "publisher" | "other")[];
+                                /** @enum {string} */
+                                businessTypesSource?: "user" | "detected";
+                                coverage?: {
+                                    total: number;
+                                    applied: number;
+                                    notApplicable: number;
+                                    unknown: number;
+                                };
+                                ai?: {
+                                    calls: number;
+                                    failures: number;
+                                    disagreements: {
+                                        task: string;
+                                        rule: unknown;
+                                        ai: unknown;
+                                    }[];
+                                    models: string[];
+                                    failureReasons?: {
+                                        task: string;
+                                        reason: string;
+                                        detail?: string;
+                                    }[];
+                                };
+                                /** @default 1 */
+                                scoringVersion: string;
                                 partial: boolean;
                                 durationMs: number;
                                 fixPackSummary: {
                                     /** @description Paths of the ready-made files, e.g. /robots.txt */
                                     files: string[];
                                     productSchemas: number;
+                                    schemas?: number;
                                     sellerSteps: number;
                                 };
                             };
@@ -507,6 +569,14 @@ export interface paths {
                             }[];
                             productSchemas: {
                                 url: string;
+                                jsonLd: {
+                                    [key: string]: unknown;
+                                };
+                            }[];
+                            /** @default [] */
+                            schemas: {
+                                url: string;
+                                type: string;
                                 jsonLd: {
                                     [key: string]: unknown;
                                 };

@@ -4,8 +4,9 @@ import type { Report, Scan } from '@/lib/api/scans';
 import { AreaScores } from './area-scores';
 import { BotAccess } from './bot-access';
 import { FixPackSummary } from './fix-pack-summary';
+import { SkippedChecks } from './skipped-checks';
 import { IssuesTable } from './issues-table';
-import { formatDate, PLATFORM_LABELS } from './labels';
+import { BUSINESS_TYPE_LABELS, formatDate, isStoreReport, PLATFORM_LABELS } from './labels';
 import { PagesTable } from './pages-table';
 import { ProblemSummary } from './problem-summary';
 import { ScoreGauge } from './score-gauge';
@@ -26,6 +27,20 @@ const NAV: NavItem[] = [
 
 export function ReportView({ report, scan, history, domain }: { report: Report; scan: Scan; history: Scan[]; domain: string }) {
   const issues = report.issues.filter((i) => i.status === 'fail' || i.status === 'warn');
+  const noun = isStoreReport(report.businessTypes) ? 'store' : 'site';
+  const types = report.businessTypes ?? [];
+  const notApplicable = report.checks.filter((c) => c.status === 'not_applicable');
+  const unknown = report.checks.filter((c) => c.status === 'unknown');
+  const c = report.coverage;
+  const coverage = c
+    ? [
+        `${c.applied} checks applied.`,
+        c.notApplicable > 0 && `${c.notApplicable} ${c.notApplicable === 1 ? "doesn't" : "don't"} apply to your ${noun}.`,
+        c.unknown > 0 && `${c.unknown} couldn't be checked.`,
+      ]
+        .filter(Boolean)
+        .join(' ')
+    : null;
 
   return (
     <DashboardShell nav={NAV}>
@@ -43,29 +58,42 @@ export function ReportView({ report, scan, history, domain }: { report: Report; 
               ))}
             </h1>
             <p className="flex flex-wrap gap-x-5 gap-y-1 text-base text-muted">
+              {types.length > 0 && (
+                <span>
+                  {types.map((t) => BUSINESS_TYPE_LABELS[t]).join(', ')} ({report.businessTypesSource === 'user' ? 'You told us' : 'Detected'})
+                </span>
+              )}
               <span>{PLATFORM_LABELS[report.platform]}</span>
               <span>Scanned {formatDate(scan.finishedAt ?? scan.createdAt)}</span>
               <span className="tabular-nums">Took {Math.round(report.durationMs / 1000)} s</span>
               {report.partial && <span className="font-semibold text-amber">Partial scan, some pages were too slow</span>}
             </p>
           </div>
-          <RescanButton scanId={scan.id} url={scan.url} />
+          <RescanButton scanId={scan.id} url={scan.url} businessTypes={scan.businessTypes ?? []} />
         </header>
+
+        {coverage && <p className="text-lg text-muted">{coverage}</p>}
 
         <div id="overview" className="grid scroll-mt-28 gap-6 lg:grid-cols-12 lg:scroll-mt-8">
           <ScoreGauge score={report.score} previewScore={report.previewScore} pagesChecked={report.pages.length} />
-          <ProblemSummary issues={issues} />
-          <FixPackSummary summary={report.fixPackSummary} />
+          <ProblemSummary issues={issues} noun={noun} />
+          <FixPackSummary summary={report.fixPackSummary} noun={noun} href={`/scans/${scan.id}/fix-pack`} />
           <AreaScores areas={report.areas} />
           <ScoreHistory scans={history} currentId={scan.id} />
         </div>
 
         <div id="problems" className="grid scroll-mt-28 lg:grid-cols-12 lg:scroll-mt-8">
-          <IssuesTable issues={issues} />
+          <IssuesTable issues={issues} noun={noun} />
         </div>
 
+        {(unknown.length > 0 || notApplicable.length > 0) && (
+          <div className="grid lg:grid-cols-12">
+            <SkippedChecks unknown={unknown} notApplicable={notApplicable} noun={noun} />
+          </div>
+        )}
+
         <div id="bots" className="grid scroll-mt-28 lg:scroll-mt-8">
-          <BotAccess bots={report.botAccess} />
+          <BotAccess bots={report.botAccess} noun={noun} />
         </div>
 
         <div id="pages" className="grid scroll-mt-28 lg:scroll-mt-8">

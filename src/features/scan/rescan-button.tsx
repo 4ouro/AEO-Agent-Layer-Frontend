@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { startScan } from '@/lib/api/scans';
+import { startScan, type BusinessType } from '@/lib/api/scans';
 
-/** Scans the same store again, e.g. after the seller fixed things. */
-export function RescanButton({ scanId, url }: { scanId: string; url: string }) {
+/** Scans the same site again, e.g. after the seller fixed things. */
+export function RescanButton({ scanId, url, businessTypes }: { scanId: string; url: string; businessTypes: BusinessType[] }) {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -14,7 +14,7 @@ export function RescanButton({ scanId, url }: { scanId: string; url: string }) {
   async function onClick() {
     setPending(true);
     setMessage(null);
-    const result = await startScan(url, { rescan: true });
+    const result = await startScan(url, { rescan: true, businessTypes });
     setPending(false);
     if ('error' in result) return setMessage(result.error);
     // The backend returns this same scan when it finished moments ago.

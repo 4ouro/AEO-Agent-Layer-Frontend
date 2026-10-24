@@ -68,7 +68,7 @@ export function DashboardShell({ nav, children }: { nav: NavItem[]; children: Re
               <path d="M12 5v14M5 12h14" />
             </svg>
           </span>
-          Scan another store
+          Scan another site
         </Link>
       </aside>
 

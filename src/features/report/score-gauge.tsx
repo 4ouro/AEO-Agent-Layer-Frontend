@@ -18,7 +18,7 @@ export function ScoreGauge({ score, previewScore, pagesChecked }: { score: numbe
   const gain = previewScore - score;
 
   return (
-    <Panel label="AI visibility score" className="lg:col-span-5">
+    <Panel label="AI visibility score" className="lg:col-span-6 xl:col-span-5">
       <div className="relative mx-auto w-full max-w-[22rem]">
         <svg viewBox="0 0 320 172" className="w-full" role="img" aria-label={`Score ${score} out of 100${gain > 0 ? `, ${previewScore} with our fixes` : ''}`}>
           {Array.from({ length: SEGMENTS }, (_, i) => {

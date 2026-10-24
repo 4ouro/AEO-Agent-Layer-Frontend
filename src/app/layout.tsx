@@ -8,7 +8,7 @@ const lora = Lora({ variable: '--font-lora', subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'AgentLayer',
-  description: 'See your store the way AI does.',
+  description: 'See your site the way AI does.',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

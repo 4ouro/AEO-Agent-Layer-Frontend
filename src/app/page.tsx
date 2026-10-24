@@ -4,14 +4,14 @@ import { ScanForm } from '@/features/scan';
 // What the score is made of (same weights as the scanner), shown so the seller knows what they're about to get.
 const CHECKS = [
   { area: 'Access', detail: 'Firewalls and robots.txt let AI bots in', weight: 30 },
-  { area: 'Product data', detail: 'Price, stock, brand and barcode in a form AI reads', weight: 25 },
-  { area: 'Visibility', detail: 'Name and price readable without JavaScript', weight: 20 },
-  { area: 'Trust', detail: 'Return, shipping and contact details', weight: 10 },
-  { area: 'AI commerce', detail: 'llms.txt and shopping protocols', weight: 10 },
+  { area: 'Your offer', detail: 'Products, pricing or services in a form AI reads', weight: 25 },
+  { area: 'Visibility', detail: 'Key content readable without JavaScript', weight: 20 },
+  { area: 'Trust', detail: 'Contact, policies and who you are', weight: 10 },
+  { area: 'AI files', detail: 'llms.txt and AI-friendly files', weight: 10 },
   { area: 'Discovery', detail: 'Sitemap, speed and broken pages', weight: 5 },
 ];
 
-// The AI visitors we test the store against.
+// The AI visitors we test the site against.
 const BOTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User'];
 
 export default function Home() {
@@ -23,9 +23,9 @@ export default function Home() {
 
       <section className="grid flex-1 grid-cols-1 items-center gap-14 px-4 py-14 md:px-10 lg:grid-cols-[7fr_5fr] lg:gap-20 lg:py-20">
         <div className="flex min-w-0 flex-col gap-8">
-          <h1 className="text-[clamp(2.75rem,6vw,5.5rem)] font-serif leading-[1.02] font-medium tracking-[-0.02em]">Can AI see your store?</h1>
+          <h1 className="text-[clamp(2.75rem,6vw,5.5rem)] font-serif leading-[1.02] font-medium tracking-[-0.02em]">Can AI see your business?</h1>
           <p className="max-w-[46ch] text-xl text-muted">
-            We visit your store the way ChatGPT, Claude and Perplexity do, and show what they miss. Free, in under a minute.
+            We visit your site the way ChatGPT, Claude and Perplexity do, and show what they miss. Free, in under a minute.
           </p>
           <ScanForm />
         </div>
