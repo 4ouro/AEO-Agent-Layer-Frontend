@@ -1,6 +1,7 @@
 import { DashboardShell, type NavItem } from '@/components/layout/dashboard-shell';
 import { RescanButton } from '@/features/scan';
 import type { Report, Scan } from '@/lib/api/scans';
+import { AllChecks } from './all-checks';
 import { AreaScores } from './area-scores';
 import { BotAccess } from './bot-access';
 import { FixPackSummary } from './fix-pack-summary';
@@ -21,6 +22,7 @@ const icon = (d: string) => (
 const NAV: NavItem[] = [
   { id: 'overview', label: 'Overview', icon: icon('M4 13h6V4H4zM14 20h6v-9h-6zM14 4h6v4h-6zM4 20h6v-4H4z') },
   { id: 'problems', label: 'Problems', icon: icon('M12 9v4M12 17h.01M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z') },
+  { id: 'checks', label: 'Checks', icon: icon('M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11') },
   { id: 'bots', label: 'AI bots', icon: icon('M12 8V4M8 8h8a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4zM9 14h.01M15 14h.01') },
   { id: 'pages', label: 'Pages', icon: icon('M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5') },
 ];
@@ -84,6 +86,10 @@ export function ReportView({ report, scan, history, domain }: { report: Report; 
 
         <div id="problems" className="grid scroll-mt-28 lg:grid-cols-12 lg:scroll-mt-8">
           <IssuesTable issues={issues} noun={noun} />
+        </div>
+
+        <div id="checks" className="grid scroll-mt-28 lg:grid-cols-12 lg:scroll-mt-8">
+          <AllChecks checks={report.checks} />
         </div>
 
         {(unknown.length > 0 || notApplicable.length > 0) && (
