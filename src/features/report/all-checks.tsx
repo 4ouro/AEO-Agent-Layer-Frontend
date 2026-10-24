@@ -5,7 +5,7 @@ import { AREA_LABELS } from './labels';
 
 type Check = Report['checks'][number];
 
-const AREA_ORDER: Check['area'][] = ['access', 'offering', 'productData', 'visibility', 'trust', 'aiCommerce', 'discovery'];
+const AREA_ORDER: Check['area'][] = ['access', 'offering', 'content', 'productData', 'visibility', 'trust', 'aiCommerce', 'discovery'];
 
 const STATUS: Record<Check['status'], { label: string; tone: string }> = {
   pass: { label: 'Passed', tone: 'text-leaf' },

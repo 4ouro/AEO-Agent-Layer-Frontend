@@ -1,11 +1,26 @@
 import { Panel } from '@/components/ui/panel';
-import type { ScannedPage } from '@/lib/api/scans';
-import { PAGE_KIND_LABELS } from './labels';
+import type { Report, ScannedPage } from '@/lib/api/scans';
+import { INVENTORY_LABELS, PAGE_KIND_LABELS } from './labels';
 
 /** The pages we looked at: what an AI bot got (raw HTML) and what a shopper's browser got. */
-export function PagesTable({ pages }: { pages: ScannedPage[] }) {
+export function PagesTable({ pages, inventory }: { pages: ScannedPage[]; inventory?: Report['inventory'] }) {
   return (
     <Panel label="Pages checked" action={<span className="text-base text-muted tabular-nums">{pages.length} pages</span>}>
+      {inventory && (
+        <div className="mb-5 flex flex-col gap-2 text-base">
+          <p>
+            We found {inventory.total.toLocaleString('en-IN')} pages on your site{inventory.fromSitemap ? ' (from your sitemap and homepage)' : ''} and
+            read {pages.length}.
+          </p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-1 text-muted">
+            {inventory.groups.map((g) => (
+              <li key={g.kind}>
+                {INVENTORY_LABELS[g.kind] ?? g.kind} {g.count.toLocaleString('en-IN')}, read {g.sampled}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="-mx-6 overflow-x-auto md:-mx-7">
         <table className="w-full min-w-[30rem] table-fixed text-base">
           <colgroup>
@@ -25,7 +40,7 @@ export function PagesTable({ pages }: { pages: ScannedPage[] }) {
               <tr key={p.url} className="border-b border-line last:border-b-0">
                 <td className="px-6 py-3.5 md:pl-7">
                   <span className="flex flex-col">
-                    <span className="font-semibold">{PAGE_KIND_LABELS[p.kind]}</span>
+                    <span className="font-semibold">{p.kind === 'other' ? (p.section ?? PAGE_KIND_LABELS.other) : PAGE_KIND_LABELS[p.kind]}</span>
                     <a href={p.url} target="_blank" rel="noreferrer" className="truncate text-muted underline-offset-4 hover:text-forest hover:underline">
                       {path(p.url)}
                     </a>

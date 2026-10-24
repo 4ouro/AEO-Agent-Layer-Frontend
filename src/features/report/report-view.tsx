@@ -103,7 +103,7 @@ export function ReportView({ report, scan, history, domain }: { report: Report; 
         </div>
 
         <div id="pages" className="grid scroll-mt-28 lg:scroll-mt-8">
-          <PagesTable pages={report.pages} />
+          <PagesTable pages={report.pages} inventory={report.inventory} />
         </div>
       </main>
     </DashboardShell>

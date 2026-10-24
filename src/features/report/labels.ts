@@ -9,6 +9,7 @@ export const AREA_LABELS: Record<Area, string> = {
   aiCommerce: 'AI files',
   discovery: 'Discovery',
   offering: 'Your offer',
+  content: 'Content',
 };
 
 // One line on what each area covers (shown as a tooltip).
@@ -20,6 +21,7 @@ export const AREA_DETAILS: Record<Area, string> = {
   aiCommerce: 'llms.txt and AI-friendly files',
   discovery: 'Sitemap, speed and broken pages',
   offering: 'Products, pricing or services in a form AI reads',
+  content: 'Blog posts and articles AI can quote',
 };
 
 export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
@@ -57,6 +59,16 @@ export const PAGE_KIND_LABELS: Record<ScannedPage['kind'], string> = {
   docs: 'Docs',
   service: 'Service',
   'case-study': 'Case study',
+  article: 'Article',
+  blog: 'Blog',
+  other: 'Other',
+};
+
+/** Plural names for the page counts line. */
+export const INVENTORY_LABELS: Record<string, string> = {
+  home: 'Homepage', article: 'Articles', blog: 'Blog', product: 'Products', category: 'Categories', service: 'Services',
+  'case-study': 'Case studies', about: 'About', contact: 'Contact', pricing: 'Pricing', features: 'Features',
+  docs: 'Docs', policy: 'Policies', other: 'Other pages',
 };
 
 export const PLATFORM_LABELS = { shopify: 'Shopify', woocommerce: 'WooCommerce', wordpress: 'WordPress', custom: 'Custom site' } as const;

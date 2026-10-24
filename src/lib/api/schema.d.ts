@@ -262,7 +262,7 @@ export interface paths {
                                 serious: boolean;
                                 areas: {
                                     /** @enum {string} */
-                                    area: "access" | "visibility" | "productData" | "offering" | "trust" | "aiCommerce" | "discovery";
+                                    area: "access" | "visibility" | "productData" | "offering" | "content" | "trust" | "aiCommerce" | "discovery";
                                     weight: number;
                                     /** @description -1 when the area could not be measured */
                                     score: number;
@@ -270,7 +270,7 @@ export interface paths {
                                 issues: {
                                     checkId: string;
                                     /** @enum {string} */
-                                    area: "access" | "visibility" | "productData" | "offering" | "trust" | "aiCommerce" | "discovery";
+                                    area: "access" | "visibility" | "productData" | "offering" | "content" | "trust" | "aiCommerce" | "discovery";
                                     title: string;
                                     /** @enum {string} */
                                     status: "pass" | "warn" | "fail" | "unknown" | "not_applicable";
@@ -295,7 +295,7 @@ export interface paths {
                                 checks: {
                                     checkId: string;
                                     /** @enum {string} */
-                                    area: "access" | "visibility" | "productData" | "offering" | "trust" | "aiCommerce" | "discovery";
+                                    area: "access" | "visibility" | "productData" | "offering" | "content" | "trust" | "aiCommerce" | "discovery";
                                     title: string;
                                     /** @enum {string} */
                                     status: "pass" | "warn" | "fail" | "unknown" | "not_applicable";
@@ -328,7 +328,8 @@ export interface paths {
                                 pages: {
                                     url: string;
                                     /** @enum {string} */
-                                    kind: "home" | "product" | "category" | "policy" | "about" | "contact" | "pricing" | "features" | "docs" | "service" | "case-study";
+                                    kind: "home" | "product" | "category" | "policy" | "about" | "contact" | "pricing" | "features" | "docs" | "service" | "case-study" | "article" | "blog" | "other";
+                                    section?: string;
                                     rawStatus: number | null;
                                     renderStatus: number | null;
                                     rawMs: number | null;
@@ -356,6 +357,21 @@ export interface paths {
                                         task: string;
                                         reason: string;
                                         detail?: string;
+                                    }[];
+                                };
+                                /** @description Every page we know the site has, by kind, and how many of each we read */
+                                inventory?: {
+                                    total: number;
+                                    fromSitemap: boolean;
+                                    groups: {
+                                        kind: string;
+                                        count: number;
+                                        sampled: number;
+                                    }[];
+                                    sections?: {
+                                        path: string;
+                                        count: number;
+                                        sampled: number;
                                     }[];
                                 };
                                 /** @default 1 */
